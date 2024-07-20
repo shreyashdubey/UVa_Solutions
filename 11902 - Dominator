@@ -1,0 +1,61 @@
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+#define fio ios_base::sync_with_stdio(false); cin.tie(0)
+int graph[105][105];
+vector<int>visited(105, 0);
+int ans[105][105] = {0};
+int n; 
+void dfs(int u, int switch_off){
+	if(u == switch_off){
+		return;
+	}
+	visited[u] = 1;
+	for(int i = 0; i < n; i ++){
+				if(graph[u][i] == 1 and visited[i] == 0){
+			dfs(i,switch_off);
+		}
+	}
+}
+void solve(){
+	for(int i = 0; i < n; i++)
+		for(int j = 0; j < n; j++)
+			ans[i][j] = 0;
+    cin >> n; 
+	for(int i = 0; i < n; i ++){
+		for(int j = 0; j < n; j ++){
+			cin >> graph[i][j];
+		}
+	}
+	for(int j = 0; j < n; j++) visited[j] = 0;
+	dfs(0,-1);
+	for(int j = 0; j < n; j++) ans[0][j] = visited[j];
+	for(int i = 0; i < n; i++){
+		for(int j = 0; j < n; j++) visited[j] = 0;
+		dfs(0,i);
+		for(int j = 0; j < n; j++){
+			if(ans[0][j] == 1 and visited[j] == 0){
+				ans[i][j] = 1;
+			} 
+		}
+	}
+	for(int i = 0; i < n; i++){
+		cout<<'+'; for(int j= 1; j < 2*n; j++) cout<<'-'; cout<<'+'; cout<<endl;
+		for(int j = 0; j < n; j++) if(ans[i][j] == 1) cout<<"|Y"; else cout<<"|N"; cout<<'|';
+		cout<<endl;
+	}
+	cout<<'+'; for(int j= 1; j < 2*n; j++) cout<<'-'; cout<<'+'; cout<<endl;
+}
+int main() {
+	fio;
+	int t = 1;
+	cin>>t;
+	int x = 1;
+	while(t--){
+		cout<<"Case "<<x<<":"<<endl;
+		x++;
+		solve();
+		// cout<<"\n";
+	} 
+}
